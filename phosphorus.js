@@ -3107,7 +3107,7 @@ P.compile = (function() {
         }
         
         if(/PROCESS/.test(block[1])){
-        	alert(JSON.strinngify(block));
+        	alert(JSON.stringify(block));
         }
 
 
