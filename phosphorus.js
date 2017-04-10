@@ -3105,6 +3105,10 @@ P.compile = (function() {
           source += ']);\n';
           delay();
         }
+        
+        if(/PROCESS/.test(block[1])){
+        	alert(JSON.strinngify(block));
+        }
 
       } else if (block[0] === 'doBroadcastAndWait') {
 
