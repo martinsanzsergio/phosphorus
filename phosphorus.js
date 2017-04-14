@@ -3,8 +3,8 @@ var P = (function() {
 
   var SCALE = window.devicePixelRatio || 1;
 
-  //var hasTouchEvents = 'ontouchstart' in document;
-    var hasTouchEvents = false;
+  var hasTouchEvents = 'ontouchstart' in document;
+  //  var hasTouchEvents = false;
 
   var inherits = function(cla, sup) {
     cla.prototype = Object.create(sup.prototype);
