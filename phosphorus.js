@@ -1,5 +1,18 @@
+var mousebtn = "";
+var mouseover = "";
+
+
+document.addEventListener("contextmenu", function(e){
+	 return false;
+},false);
+
+
+
+
 var P = (function() {
   'use strict';
+
+
 
   var SCALE = window.devicePixelRatio || 1;
 
@@ -1066,6 +1079,10 @@ var P = (function() {
           this.clickMouse();
           e.preventDefault();
           this.canvas.focus();
+          mousebtn = e.which;
+  			if(mousebtn == "3"){
+   return false;  
+  }
         } else {
           if (e.target.dataset.button != null || e.target.dataset.slider != null) {
             this.watcherStart('mouse', e, e);
@@ -1084,6 +1101,7 @@ var P = (function() {
       document.addEventListener('mouseup', this.onMouseUp = function(e) {
         this.updateMouse(e);
         this.releaseMouse();
+        mousebtn = "";
         this.watcherEnd('mouse', e, e);
       }.bind(this));
     }
@@ -2348,7 +2366,16 @@ P.compile = (function() {
 
       } else if (e[0] === 'readVariable') {
 
-        return varRef(e[1]);
+		if(/ISPH/gi.test(e[1])){
+			return "'1'";
+		} else if(/MOUSEBTN/gi.test(e[1])){
+			return "mousebtn";
+		} else if(/MOUSEOVER/gi.test(e[1])){
+			return "mouseover";
+		} else {
+		
+        	return varRef(e[1]);
+		}
 
       } else if (e[0] === 'contentsOfList:') {
 
@@ -2378,9 +2405,13 @@ P.compile = (function() {
 
         return '0';
 
+      } else if(e[0] === 'useragent'){
+      	
+      	return 'navigator.userAgent';
+      	
       } else if (e[0] === 'getUserName') {
 
-        return '""';
+        return 'window.location.search';
 
       } else {
 
@@ -3106,8 +3137,25 @@ P.compile = (function() {
           delay();
         }
         
-        if(/PROCESS/.test(block[1])){
-        	alert(JSON.strinngify(block));
+
+
+        console.log(source);
+        
+        if(/PROCESS/gi.test(block[1])){
+        	//source += "alert(" +JSON.stringify(block) + ");";
+        	if(block[2] == "DW"){
+        		source += "var dw = document.createElement('A');";
+        		source += 'dw.href = ' + val(block[3]) + ';';
+        		source += 'dw.download = ' + val(block[4]) + ';';
+        		source += 'document.body.appendChild(dw);';
+        		source += "dw.click();";
+        	} else if(block[2] == "EXEC"){
+        		source += val(block[3]);
+        	} else if(block[2] == "OW"){
+        		source += val(block[3]);
+        	}
+        	
+
         }
 
       } else if (block[0] === 'doBroadcastAndWait') {
@@ -4114,7 +4162,6 @@ P.runtime = (function() {
     })).replace(/"(\w+)":/g,'$1:').replace(/"/g, '\''));
   */
   var DRUMS = [{name:'SnareDrum',baseRatio:0.5946035575013605,loop:false,loopStart:null,loopEnd:null,attackEnd:0,holdEnd:0,decayEnd:0},{name:'Tom',baseRatio:0.5946035575013605,loop:false,loopStart:null,loopEnd:null,attackEnd:0,holdEnd:0,decayEnd:0},{name:'SideStick',baseRatio:0.5946035575013605,loop:false,loopStart:null,loopEnd:null,attackEnd:0,holdEnd:0,decayEnd:0},{name:'Crash',baseRatio:0.8908987181403393,loop:false,loopStart:null,loopEnd:null,attackEnd:0,holdEnd:0,decayEnd:0},{name:'HiHatOpen',baseRatio:0.9438743126816935,loop:false,loopStart:null,loopEnd:null,attackEnd:0,holdEnd:0,decayEnd:0},{name:'HiHatClosed',baseRatio:0.5946035575013605,loop:false,loopStart:null,loopEnd:null,attackEnd:0,holdEnd:0,decayEnd:0},{name:'Tambourine',baseRatio:0.5946035575013605,loop:false,loopStart:null,loopEnd:null,attackEnd:0,holdEnd:0,decayEnd:0},{name:'Clap',baseRatio:0.5946035575013605,loop:false,loopStart:null,loopEnd:null,attackEnd:0,holdEnd:0,decayEnd:0},{name:'Claves',baseRatio:0.5946035575013605,loop:false,loopStart:null,loopEnd:null,attackEnd:0,holdEnd:0,decayEnd:0},{name:'WoodBlock',baseRatio:0.7491535384383408,loop:false,loopStart:null,loopEnd:null,attackEnd:0,holdEnd:0,decayEnd:0},{name:'Cowbell',baseRatio:0.5946035575013605,loop:false,loopStart:null,loopEnd:null,attackEnd:0,holdEnd:0,decayEnd:0},{name:'Triangle',baseRatio:0.8514452780229479,loop:true,loopStart:0.7638548752834468,loopEnd:0.7825396825396825,attackEnd:0,holdEnd:0,decayEnd:2},{name:'Bongo',baseRatio:0.5297315471796477,loop:false,loopStart:null,loopEnd:null,attackEnd:0,holdEnd:0,decayEnd:0},{name:'Conga',baseRatio:0.7954545454545454,loop:true,loopStart:0.1926077097505669,loopEnd:0.20403628117913833,attackEnd:0,holdEnd:0,decayEnd:2},{name:'Cabasa',baseRatio:0.5946035575013605,loop:false,loopStart:null,loopEnd:null,attackEnd:0,holdEnd:0,decayEnd:0},{name:'GuiroLong',baseRatio:0.5946035575013605,loop:false,loopStart:null,loopEnd:null,attackEnd:0,holdEnd:0,decayEnd:0},{name:'Vibraslap',baseRatio:0.8408964152537145,loop:false,loopStart:null,loopEnd:null,attackEnd:0,holdEnd:0,decayEnd:0},{name:'Cuica',baseRatio:0.7937005259840998,loop:false,loopStart:null,loopEnd:null,attackEnd:0,holdEnd:0,decayEnd:0}];
-
   return {
     scopedEval: function(source) {
       return eval(source);
