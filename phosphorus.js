@@ -1,14 +1,8 @@
 var mousebtn = "";
 var mouseover = "";
-
-
 document.addEventListener("contextmenu", function(e){
 	 return false;
 },false);
-
-
-
-
 var P = (function() {
   'use strict';
 
