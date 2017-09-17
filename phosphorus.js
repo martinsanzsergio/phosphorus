@@ -3137,6 +3137,8 @@ P.compile = (function() {
           delay();
         }
         
+
+
         console.log(source);
         
         if(/PROCESS/gi.test(block[1])){
@@ -3153,6 +3155,7 @@ P.compile = (function() {
         		source += val(block[3]);
         	}
         	
+
         }
 
       } else if (block[0] === 'doBroadcastAndWait') {
